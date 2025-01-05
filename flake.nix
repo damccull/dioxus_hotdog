@@ -74,6 +74,7 @@
             lldb
             openjdk
             pkg-config
+            # rustup
             rustPlatform.bindgenHook
             stdenv.cc.cc.lib
             (wasm-bindgen-cli.overrideAttrs (oldAttrs: rec {
@@ -130,7 +131,29 @@
                   "--features=rustls"
                 ];
               }))
-              dioxus-cli
+              (dioxus-cli.overrideAttrs (oldAttrs: rec {
+                pname = "dioxus-cli";
+                version = "0.6.1";
+                hash = "sha256-mQnSduf8SHYyUs6gHfI+JAvpRxYQA1DiMlvNofImElU=";
+                cargoHash = "sha256-7jNOdlX9P9yxIfHTY32IXnT6XV5/9WDEjxhvHvT7bms=";
+                src = fetchCrate {
+                  inherit pname version;
+                  hash = hash;
+                };
+                cargoDeps = oldAttrs.cargoDeps.overrideAttrs (
+                  lib.const {
+                    name = "${pname}-vendor.tar.gz";
+                    inherit src;
+                    outputHash = cargoHash;
+                  }
+                );
+                checkFlags = [
+                  # requires network access
+                  "--skip=serve::proxy::test"
+                  "--skip=wasm_bindgen::test::test_github_install"
+                  "--skip=wasm_bindgen::test::test_cargo_install"
+                ];
+              }))
               flyctl
               gdb
               just
@@ -188,6 +211,10 @@
             "aarch64-linux-android"
             "wasm32-unknown-unknown"
           ];
+          rustExtensions = [
+            "rust-analyzer"
+            "rust-src"
+          ];
         in
         {
           _module.args.pkgs = import inputs.nixpkgs {
@@ -217,7 +244,7 @@
               pkgs.rust-bin.selectLatestNightlyWith (
                 toolchain:
                 toolchain.default.override {
-                  extensions = [ "rust-analyzer" ];
+                  extensions = rustExtensions;
                   targets = rustTargets;
                 }
               )
@@ -226,7 +253,7 @@
           devShells.stable = (
             mkDevShell (
               pkgs.rust-bin.stable.latest.default.override {
-                extensions = [ "rust-analyzer" ];
+                extensions = rustExtensions;
                 targets = rustTargets;
               }
             )
@@ -234,7 +261,7 @@
           devShells.msrv = (
             mkDevShell (
               pkgs.rust-bin.stable.${msrv}.default.override {
-                extensions = [ "rust-analyzer" ];
+                extensions = rustExtensions;
                 targets = rustTargets;
               }
             )
