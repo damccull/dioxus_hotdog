@@ -77,22 +77,22 @@
             # rustup
             rustPlatform.bindgenHook
             stdenv.cc.cc.lib
-            (wasm-bindgen-cli.overrideAttrs (oldAttrs: rec {
-              pname = "wasm-bindgen-cli";
-              version = "0.2.99";
-              hash = "sha256-1AN2E9t/lZhbXdVznhTcniy+7ZzlaEp/gwLEAucs6EA=";
-              # hash = lib.fakeHash;
-              cargoHash = "sha256-Nfu/TwOM28I3MbS9udewK4thCsCWjQns4XZu8qxVSX8=";
-              # cargoHash = lib.fakeHash;
-              src = fetchCrate { inherit pname version hash; };
-              cargoDeps = oldAttrs.cargoDeps.overrideAttrs (
-                lib.const {
-                  name = "${pname}-vendor.tar.gz";
-                  inherit src;
-                  outputHash = cargoHash;
-                }
-              );
-            }))
+            # (wasm-bindgen-cli.overrideAttrs (oldAttrs: rec {
+            #   pname = "wasm-bindgen-cli";
+            #   version = "0.2.99";
+            #   hash = "sha256-1AN2E9t/lZhbXdVznhTcniy+7ZzlaEp/gwLEAucs6EA=";
+            #   # hash = lib.fakeHash;
+            #   cargoHash = "sha256-Nfu/TwOM28I3MbS9udewK4thCsCWjQns4XZu8qxVSX8=";
+            #   # cargoHash = lib.fakeHash;
+            #   src = fetchCrate { inherit pname version hash; };
+            #   cargoDeps = oldAttrs.cargoDeps.overrideAttrs (
+            #     lib.const {
+            #       name = "${pname}-vendor.tar.gz";
+            #       inherit src;
+            #       outputHash = cargoHash;
+            #     }
+            #   );
+            # }))
             webkitgtk_4_1
             xdotool
           ];
@@ -131,29 +131,30 @@
                   "--features=rustls"
                 ];
               }))
-              (dioxus-cli.overrideAttrs (oldAttrs: rec {
-                pname = "dioxus-cli";
-                version = "0.6.1";
-                hash = "sha256-mQnSduf8SHYyUs6gHfI+JAvpRxYQA1DiMlvNofImElU=";
-                cargoHash = "sha256-7jNOdlX9P9yxIfHTY32IXnT6XV5/9WDEjxhvHvT7bms=";
-                src = fetchCrate {
-                  inherit pname version;
-                  hash = hash;
-                };
-                cargoDeps = oldAttrs.cargoDeps.overrideAttrs (
-                  lib.const {
-                    name = "${pname}-vendor.tar.gz";
-                    inherit src;
-                    outputHash = cargoHash;
-                  }
-                );
-                checkFlags = [
-                  # requires network access
-                  "--skip=serve::proxy::test"
-                  "--skip=wasm_bindgen::test::test_github_install"
-                  "--skip=wasm_bindgen::test::test_cargo_install"
-                ];
-              }))
+              dioxus-cli
+              # (dioxus-cli.overrideAttrs (oldAttrs: rec {
+              #   pname = "dioxus-cli";
+              #   version = "0.6.1";
+              #   hash = "sha256-mQnSduf8SHYyUs6gHfI+JAvpRxYQA1DiMlvNofImElU=";
+              #   cargoHash = "sha256-7jNOdlX9P9yxIfHTY32IXnT6XV5/9WDEjxhvHvT7bms=";
+              #   src = fetchCrate {
+              #     inherit pname version;
+              #     hash = hash;
+              #   };
+              #   cargoDeps = oldAttrs.cargoDeps.overrideAttrs (
+              #     lib.const {
+              #       name = "${pname}-vendor.tar.gz";
+              #       inherit src;
+              #       outputHash = cargoHash;
+              #     }
+              #   );
+              #   checkFlags = [
+              #     # requires network access
+              #     "--skip=serve::proxy::test"
+              #     "--skip=wasm_bindgen::test::test_github_install"
+              #     "--skip=wasm_bindgen::test::test_cargo_install"
+              #   ];
+              # }))
               flyctl
               gdb
               just
