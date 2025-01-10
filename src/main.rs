@@ -63,18 +63,7 @@ struct DogApi {
 
 #[server]
 async fn save_dog(image: String) -> Result<(), ServerFnError> {
-    use std::io::Write;
-
-    // Open dogs.txt in append-only mode
-    let mut file = std::fs::OpenOptions::new()
-        .write(true)
-        .append(true)
-        .create(true)
-        .open("dogs.txt")
-        .unwrap();
-
-    // Write the image url with a newline appended
-    file.write_fmt(format_args!("{image}\n"));
+    DB.with(|f| f.execute("INSERT INTO dogs (url) VALUES (?1)", &[&image]))?;
 
     Ok(())
 }
