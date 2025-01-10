@@ -93,6 +93,7 @@
             #     }
             #   );
             # }))
+            sqlite
             webkitgtk_4_1
             xdotool
           ];
