@@ -45,7 +45,13 @@ fn DogView() -> Element {
         div {
             id: "buttons",
             button { onclick: move |_| img_src.restart(), id:"skip", "skip"}
-            button { onclick: move |_| img_src.restart(), id:"save", "save"}
+            button { onclick: move |_| async move {
+                let current = img_src.cloned().unwrap();
+
+                img_src.restart();
+
+                save_dog(current).await;
+            }, id:"save", "save"}
         }
     }
 }
@@ -53,4 +59,41 @@ fn DogView() -> Element {
 #[derive(Debug, serde::Deserialize)]
 struct DogApi {
     message: String,
+}
+
+#[server]
+async fn save_dog(image: String) -> Result<(), ServerFnError> {
+    use std::io::Write;
+
+    // Open dogs.txt in append-only mode
+    let mut file = std::fs::OpenOptions::new()
+        .write(true)
+        .append(true)
+        .create(true)
+        .open("dogs.txt")
+        .unwrap();
+
+    // Write the image url with a newline appended
+    file.write_fmt(format_args!("{image}\n"));
+
+    Ok(())
+}
+
+#[cfg(feature = "server")]
+thread_local! {
+    pub static DB: rusqlite::Connection = {
+        // Open the database connection
+        let conn = rusqlite::Connection::open("hotdog.db").expect("Failed to open database");
+
+        // Create dogs table if it doesn't already exist
+        conn.execute_batch(
+            "CREATE TABLE IF NOT EXISTS dogs (
+                id INTEGER PRIMARY KEY,
+                url TEXT NOT NULL
+            );",
+        ).unwrap();
+
+        // Return the server connection
+        conn
+    }
 }
