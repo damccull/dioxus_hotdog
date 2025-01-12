@@ -6,7 +6,7 @@ name = "hot_dog"
 [web.app]
 
 # HTML title tag content
-title = "hot_dog"
+title = "HotDog!"
 
 # include `assets` in web platform
 [web.resource]
@@ -22,3 +22,8 @@ script = []
 # Javascript code file
 # serve: [dev-server] only
 script = []
+
+[bundle]
+identifier = "com.digitalmccullough.hotdog"
+publisher = "digitalmccullough.com"
+icon = ["assets/icon.png"]
