@@ -67,11 +67,20 @@
             atkmm
             # at-spi2-atk
             clang
+            fontconfig
+            fribidi
             gdk-pixbuf
             glib
             gtk3
+            gsettings-desktop-schemas
+            harfbuzz
+            freetype
+            libdrm
+            libGL
+            libgpg-error
             lld
             lldb
+            mesa
             openjdk
             pkg-config
             # rustup
@@ -94,8 +103,12 @@
             #   );
             # }))
             sqlite
+            wrapGAppsHook
             webkitgtk_4_1
             xdotool
+            xorg.libX11
+            xorg.libxcb
+            zlib
           ];
           devDeps =
             with pkgs;
@@ -195,11 +208,24 @@
                 # TODO: figure out if it's possible to remove this or allow a user's preferred shell
                 exec env SHELL=${pkgs.bashInteractive}/bin/bash zellij --layout ./zellij_layout.kdl
               '';
-              # LD_LIBRARY_PATH =
-              #   with pkgs;
-              #   lib.makeLibraryPath [
-              #     stdenv.cc.cc.lib
-              #   ];
+              LD_LIBRARY_PATH =
+                with pkgs;
+                lib.makeLibraryPath [
+                  fontconfig
+                  fribidi
+                  glib
+                  gsettings-desktop-schemas
+                  harfbuzz
+                  freetype
+                  libdrm
+                  libGL
+                  libgpg-error
+                  mesa
+                  xorg.libX11
+                  xorg.libxcb
+                  stdenv.cc.cc.lib
+                  zlib
+                ];
               ANDROID_HOME = "${androidSdk}/libexec/android-sdk";
               ANDROID_NDK_HOME = "${androidSdk}/libexec/android-sdk/ndk-bundle";
               RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
