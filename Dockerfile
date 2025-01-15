@@ -16,7 +16,7 @@ RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/ca
 RUN cargo binstall dioxus-cli -y --force
 
 # Create final bundle
-RUN dx bundle --platform web
+RUN dx bundle --release --platform web
 
 FROM chef AS runtime
 COPY --from=builder /app/target/dx/hot_dog/release/web/ /usr/local/app
