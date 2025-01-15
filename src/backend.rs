@@ -1,13 +1,13 @@
 use dioxus::prelude::*;
 
-#[server]
+#[server(endpoint = "save_dog")]
 pub async fn save_dog(image: String) -> Result<(), ServerFnError> {
     DB.with(|f| f.execute("INSERT INTO dogs (url) VALUES (?1)", &[&image]))?;
 
     Ok(())
 }
 
-#[server]
+#[server(endpoint = "list_dogs")]
 pub async fn list_dogs() -> Result<Vec<(usize, String)>, ServerFnError> {
     let dogs = DB.with(|f| {
         f.prepare("SELECT id, url FROM dogs ORDER BY id DESC LIMIT 10")
@@ -21,7 +21,7 @@ pub async fn list_dogs() -> Result<Vec<(usize, String)>, ServerFnError> {
     Ok(dogs)
 }
 
-#[server]
+#[server(endpoint = "delete_dog")]
 pub async fn delete_favorite(id: usize) -> Result<(), ServerFnError> {
     DB.with(|f| f.execute("DELETE FROM dogs WHERE id=(?1)", &[&id]))?;
     Ok(())

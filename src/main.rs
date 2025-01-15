@@ -8,6 +8,9 @@ use dioxus::prelude::*;
 static CSS: Asset = asset!("/assets/main.css");
 
 fn main() {
+    #[cfg(not(feature = "server"))]
+    server_fn::client::set_server_url("damccull-hotdog.fly.dev");
+
     dioxus::launch(App);
 }
 
