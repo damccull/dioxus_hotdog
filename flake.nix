@@ -82,6 +82,7 @@
             lldb
             mesa
             openjdk
+            openssl
             pkg-config
             # rustup
             rustPlatform.bindgenHook
