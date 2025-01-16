@@ -1,17 +1,24 @@
 use dioxus::prelude::*;
+use reqwest::Client;
 
 use crate::{backend::save_dog, DogApi};
 
 #[component]
 pub fn DogView() -> Element {
     let mut img_src = use_resource(|| async move {
-        reqwest::get("https://dog.ceo/api/breeds/image/random")
+        let client = Client::builder().use_rustls_tls().build().unwrap();
+
+        let url = client
+            .get("https://dog.ceo/api/breeds/image/random")
+            .send()
             .await
             .unwrap()
             .json::<DogApi>()
             .await
             .unwrap()
-            .message
+            .message;
+
+        url
     });
 
     rsx! {

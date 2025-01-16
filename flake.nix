@@ -71,6 +71,7 @@
             fribidi
             gdk-pixbuf
             glib
+            glib-networking
             gtk3
             gsettings-desktop-schemas
             harfbuzz
@@ -229,6 +230,7 @@
                 ];
               ANDROID_HOME = "${androidSdk}/libexec/android-sdk";
               ANDROID_NDK_HOME = "${androidSdk}/libexec/android-sdk/ndk-bundle";
+              GIO_MODULE_DIR = "${pkgs.glib-networking}/lib/gio/modules/";
               RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
               buildInputs = runtimeDeps;
               nativeBuildInputs = buildDeps ++ devDeps ++ [ rustc ];
