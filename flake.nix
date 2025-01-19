@@ -119,7 +119,6 @@
               # NOT included in the nix build operation
               bashInteractive
               bunyan-rs
-              cargo-binstall
               cargo-deny
               cargo-edit
               cargo-expand
@@ -223,9 +222,9 @@
                   libGL
                   libgpg-error
                   mesa
+                  stdenv.cc.cc.lib
                   xorg.libX11
                   xorg.libxcb
-                  stdenv.cc.cc.lib
                   zlib
                 ];
               ANDROID_HOME = "${androidSdk}/libexec/android-sdk";
@@ -264,7 +263,7 @@
           };
 
           packages.default = self'.packages.base;
-          devShells.default = self'.devShells.nightly;
+          devShells.default = self'.devShells.stable;
 
           packages.base = (rustPackage "");
           packages.bunyan = (rustPackage "bunyan");
